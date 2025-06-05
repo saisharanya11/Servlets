@@ -1,0 +1,36 @@
+# Servlets
+Creating Web Page By Using Advanced Java
+package contoller;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.persondao;
+import dto.Person;
+
+public class LoginClass extends HttpServlet {
+
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String FrontEndEmail=req.getParameter("email");
+		String FrontEndPassword=req.getParameter("password");
+		persondao pdao=new persondao();
+		Person dbperson =pdao.fetchPersonByEmail(FrontEndEmail);
+		
+		if (dbperson!=null) {
+			
+			if (dbperson.getPassword().equals(FrontEndPassword)) {
+				resp.sendRedirect("Sucess.html");
+			}
+			else 
+			{
+				resp.sendRedirect("LogIn.jsp");
+			}
+			
+		}
+	}
+}
