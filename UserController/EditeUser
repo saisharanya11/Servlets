@@ -1,0 +1,51 @@
+package controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.Userdao;
+import dto.User;
+
+@WebServlet("/Edit")
+public class EditController extends HttpServlet {
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		int id=Integer.parseInt(req.getParameter("id"));
+		String name=req.getParameter("name");
+		int age =Integer.parseInt(req.getParameter("age"));
+		String address=req.getParameter("address");
+	    long phone=Long.parseLong(req.getParameter("phone"));
+		String email=req.getParameter("email");
+		String password =req.getParameter("password");
+		
+		User newUser =new User();
+		 newUser.setId(id);
+		newUser.setName(name);
+		newUser.setAge(age);
+		newUser.setAddress(address);
+		newUser.setEmail(email);
+		newUser.setPhone(phone);
+		newUser.setPassword(password);
+		
+		Userdao userdao =new Userdao();
+		User updateUser=userdao.updateUser(newUser);
+		if(updateUser !=null) {
+			 List<User> list =userdao.fetchAll();
+			 req.setAttribute("p", list);
+			 
+			 RequestDispatcher requestDispatcher=req.getRequestDispatcher("Display.jsp");
+			 requestDispatcher.forward(req, resp);
+		}
+		
+
+	}
+	
+}
