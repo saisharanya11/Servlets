@@ -1,0 +1,43 @@
+package controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.Userdao;
+import dto.User;
+@WebServlet("/Login")
+public class Login extends HttpServlet{
+
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String FrontEndEmail=req.getParameter("c");
+		String FrontEndPassword=req.getParameter("password");
+		Userdao pdao=new Userdao();
+		User dbuser =pdao.fetchUserByEmail(FrontEndEmail);
+		
+		if (dbuser!=null) {
+			
+			if (dbuser.getPassword().equals(FrontEndPassword)) {
+				List<User> list=pdao.fetchAll();
+				req.setAttribute("p", list );
+				RequestDispatcher requestDispatcher=req.getRequestDispatcher("Display.jsp");
+				requestDispatcher.forward(req, resp);
+			}
+			else 
+			{
+				req.setAttribute("key", "Invalid Credentials plz enter correct Credentials");
+				RequestDispatcher requestDispatcher=req.getRequestDispatcher("LogIn.jsp");
+				requestDispatcher.forward(req, resp);
+				
+			}
+			
+		}
+	}
+}
